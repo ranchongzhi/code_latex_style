@@ -1,0 +1,50 @@
+% !Tex Program = xelatex
+% matlab code font - ttfamily
+% python code font - Consolas
+
+\documentclass[11pt]{article}
+%\usepackage{ctex}
+
+\usepackage[left=1.25in,right=1.25in,top=1in,bottom=1in]{geometry}
+
+\input{style.tex}
+
+\usepackage{fontspec}  % for Consolas
+
+
+\begin{document}
+
+\begin{Python}{draw.py}
+    import pandas as pd
+    from passmatrix import pass_matrix
+    import numpy as np
+
+    path = "D:\meisai_train_1//2020_Problem_D_DATA//passingevents.csv"
+    s, players = pass_matrix(1, path)
+    print(s)
+    print(players)
+
+    node_size=np.zeros([len(players),1])
+    for i in range(len(s)):
+        node_size[i]=np.sum(s[i,:])+np.sum(s[:,i])
+    print(node_size)
+
+    nebor_s=np.zeros_like(s)
+    edge_weights=[]
+    for i in range(s.shape[0]):
+        for j in range(s.shape[1]):
+            if s[i,j]>0:
+                edge_weights.append(s[i,j])
+                nebor_s[i,j]=1
+
+    edge_weights=np.array(edge_weights)
+    # print(nebor_s)
+    # print(edge_weights.shape)
+    nebor_s_df=pd.DataFrame(nebor_s,index=players,columns=players)
+    edge_weights_df=pd.DataFrame(edge_weights)
+    # print(nebor_s_df)
+    nebor_s_df.to_excel('match_1.xlsx')
+    edge_weights_df.to_clipboard()
+\end{Python}
+
+\end{document} 
